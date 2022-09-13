@@ -1,15 +1,15 @@
 FROM ruby:2.7.0
 WORKDIR /app
 
-# mecab
+# mecab-ko
 RUN set -ex \
-	&& wget --no-check-certificate https://github.com/buruzaemon/natto/raw/master/etc/mecab-0.996.tar.gz && tar zxf mecab-0.996.tar.gz \
-  && cd mecab-0.996 && ./configure --enable-utf8-only && make && make install \
+	&& wget --no-check-certificate https://github.com/mnmandahalf/natto/raw/add-mecab-ko/etc/mecab-0.996-ko-0.9.2.tar.gz && tar xvf mecab-0.996-ko-0.9.2.tar.gz \
+  && cd mecab-0.996-ko-0.9.2 && ./configure && make && make install \
   && ldconfig
- # mecab-ipadic
+# mecab-ko-dic
 RUN set -ex \
-  && wget --no-check-certificate https://github.com/buruzaemon/natto/raw/master/etc/mecab-ipadic-2.7.0-20070801.tar.gz && tar zxf mecab-ipadic-2.7.0-20070801.tar.gz \
-  && cd mecab-ipadic-2.7.0-20070801 && ./configure --with-charset=utf8 && make && make install \
+  && wget --no-check-certificate https://github.com/mnmandahalf/natto/raw/add-mecab-ko/etc/mecab-ko-dic-2.1.1-20180720.tar.gz && tar xvf mecab-ko-dic-2.1.1-20180720.tar.gz \
+  && cd mecab-ko-dic-2.1.1-20180720 && ./autogen.sh && ./configure && make && make install \
   && ldconfig
 
 RUN gem install minitest
