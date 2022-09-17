@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'rbconfig'
+require 'pry'
 
 class TestMeCab < Minitest::Test
     
@@ -358,8 +359,8 @@ class TestMeCab < Minitest::Test
     assert_equal(expected, actual)
   end
 
-  def test_parse_tostr_yomi
-    opts = '-Oyomi'
+  def test_parse_tostr_dump
+    opts = '-Odump'
     expected = `#{@test_cmd} | mecab #{opts}`.lines.to_a
     expected.delete_if {|e| e =~ /^(EOS|BOS|\t)/ }
     expected.map!{|e| e.force_encoding(Encoding.default_external)} if @arch =~ /java/i && RUBY_VERSION.to_f >= 1.9
@@ -504,18 +505,21 @@ class TestMeCab < Minitest::Test
     assert_equal(expected, actual)
   end
 
-  def test_parse_tonodes_yomi
-    opts = '-Oyomi'
+  def test_parse_tonodes_dump
+    opts = '-Odump'
     expected = `#{@test_cmd} | mecab #{opts}`.lines.to_a
-    expected.delete_if {|e| e =~ /^(EOS|BOS|\t)/ }
+    expected.delete_if {|e| e =~ /(EOS|BOS|\t)/ }
     expected.map!{|e| e.force_encoding(Encoding.default_external)} if @arch =~ /java/i && RUBY_VERSION.to_f >= 1.9
-    expected = expected.join.strip
 
     nm = Natto::MeCab.new(opts)
     actual = []
-    nm.parse(@test_str) {|n| actual << n.feature if n.is_nor? }    
+    nm.parse(@test_str) {|n| actual << n.surface if n.is_nor? }
   
-    assert_equal(expected, actual.join)
+    assert_equal(expected[0].split[1], actual[0])
+    assert_equal(expected[1].split[1], actual[1])
+    assert_equal(expected[2].split[1], actual[2])
+    assert_equal(expected[3].split[1], actual[3])
+    assert_equal(expected[4].split[1], actual[4])
   end
 
   def test_parse_tonodes_output_formatting
@@ -683,8 +687,6 @@ class TestMeCab < Minitest::Test
     assert_equal(expected[2].split.first, enum.next.surface)
     assert_equal(expected[3].split.first, enum.next.surface)
     assert_equal(expected[4].split.first, enum.next.surface)
-    assert_equal(expected[5].split.first, enum.next.surface)
-    assert_equal(expected[6].split.first, enum.next.surface)
   end
   
   def test_enum_parse_with_format
@@ -695,14 +697,11 @@ class TestMeCab < Minitest::Test
 
     nm = Natto::MeCab.new("-F#{opts}")
     enum = nm.enum_parse(@test_str)
-
     assert_equal(expected[0].strip, enum.next.feature)
     assert_equal(expected[1].strip, enum.next.feature)
     assert_equal(expected[2].strip, enum.next.feature)
     assert_equal(expected[3].strip, enum.next.feature)
     assert_equal(expected[4].strip, enum.next.feature)
-    assert_equal(expected[5].strip, enum.next.feature)
-    assert_equal(expected[6].strip, enum.next.feature)
   end
 end 
 

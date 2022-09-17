@@ -14,4 +14,5 @@ RUN set -ex \
 
 RUN gem install minitest
 RUN gem install ffi
+RUN gem install pry-byebug
 ENV RUBYOPT -EUTF-8

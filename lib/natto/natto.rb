@@ -173,7 +173,7 @@ module Natto
     # - :dicdir --  system dicdir
     # - :userdic --  user dictionary
     # - :lattice_level --  lattice information level (DEPRECATED)
-    # - :output_format_type --  output format type (wakati, chasen, yomi, etc.)
+    # - :output_format_type --  output format type (wakati, none, dump, em)
     # - :all_morphs --  output all morphs (default false)
     # - :nbest --  output N best results (integer, default 1), requires lattice level >= 1
     # - :partial --  partial parsing mode 
